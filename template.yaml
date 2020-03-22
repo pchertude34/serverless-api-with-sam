@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  MyServerlessFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Events:
+        GetData:
+          Type: Api
+          Properties:
+            Path: '/'
+            Method: Get
+            RestApiId:
+              Ref: ApiGatewayApi
+        PostData:
+          Type: Api
+          Properties:
+            Path: '/'
+            Method: Post
+            RestApiId:
+              Ref: ApiGatewayApi
+
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: api
+      Cors:
+        AllowHeaders: "'*'"
+        AllowMethods: "'*'"
+        AllowOrigin: "'*'"
