@@ -24,6 +24,29 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
 
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: !Ref ApiGatewayApi
+          Stage: 'api'
+
+  ApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: my-api-key
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref ApiGatewayApi
+          StageName: 'api'
+
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -32,3 +55,5 @@ Resources:
         AllowHeaders: "'*'"
         AllowMethods: "'*'"
         AllowOrigin: "'*'"
+      Auth:
+        ApiKeyRequired: true
